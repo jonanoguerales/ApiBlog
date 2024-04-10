@@ -1,38 +1,39 @@
-const express = require('express') // Iniciar servidor backend
-const app = express() // Iniciar aplicacion en el servidor
-const dotenv = require('dotenv') // Para ocultar credenciales
-const mongoose = require('mongoose') // Para conectar con base de datos
-const multer = require('multer')
-const path = require('path')
+import express from "express"; // Iniciar servidor backend
+const app = express(); // Iniciar aplicacion de servidor
+import dotenv from "dotenv"; // Para ocultar credenciales
+import mongoose from "mongoose"; // Para conectar con base de datos
+import multer from "multer";
+import path from "path";
 // const http = require('http')
 // const { Server } = require('socket.io')
-const cors = require('cors')
+import cors from "cors";
 
 // Routes
-const authRoute = require('./routes/auth') // Para conectar con base de datos
-const usersRoute = require('./routes/users')
-const userRoute = require('./routes/user') // Para conectar con base de datos
-const postsRoute = require('./routes/posts')// Para conectar con base de datos
-const postRoute = require('./routes/post')
-const commentsRoute = require('./routes/comments')
-const visitasRoute = require('./routes/visitas')
-const usersNuevosRoute = require('./routes/usersNuevos')
-const categoryRoute = require('./routes/categories')// Para conectar con base de datos
+import usersRoute from "./routes/users.js"; // Para conectar con base de datos
+import authRoute from "./routes/auth.js";
+import userRoute from "./routes/user.js"; // Para conectar con base de datos
+import postRoute from "./routes/post.js"; // Para conectar con base de datos
+import postsRoute from "./routes/post.js";
+import commentsRoute from "./routes/comments.js";
+import visitasRoute from "./routes/visitas.js";
+import usersNuevosRoute from "./routes/usersNuevos.js";
+import categoryRoute from "./routes/categories.js"; // Para conectar con base de datos
 
 const corsOptions = {
-  origen: 'http://localhost:3001',
-  optionsSuccessStatus: 200
-}
+  origen: "http://localhost:3001",
+  optionsSuccessStatus: 200,
+};
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
-const uri = "mongodb+srv://Ordenador12:Ordenador12@nvo.7shohhw.mongodb.net/?retryWrites=true&w=majority";
+import { MongoClient, ServerApiVersion } from "mongodb";
+const uri =
+  "mongodb+srv://Ordenador12:Ordenador12@nvo.7shohhw.mongodb.net/?retryWrites=true&w=majority";
 // Create a MongoClient with a MongoClientOptions object to set the Stable API version
 const client = new MongoClient(uri, {
   serverApi: {
     version: ServerApiVersion.v1,
     strict: true,
     deprecationErrors: true,
-  }
+  },
 });
 async function run() {
   try {
@@ -40,7 +41,9 @@ async function run() {
     await client.connect();
     // Send a ping to confirm a successful connection
     await client.db("admin").command({ ping: 1 });
-    console.log("Pinged your deployment. You successfully connected to MongoDB!");
+    console.log(
+      "Pinged your deployment. You successfully connected to MongoDB!"
+    );
   } finally {
     // Ensures that the client will close when you finish/error
     await client.close();
@@ -48,8 +51,7 @@ async function run() {
 }
 run().catch(console.dir);
 
-
-app.use(cors(corsOptions))
+app.use(cors(corsOptions));
 
 /*
 // socket conf
@@ -69,43 +71,47 @@ io.on('connection', (socket) => {
   }
 }) */
 
-dotenv.config()
-app.use(express.json())
-app.use('/images', express.static(path.join(__dirname, '/images')))
+dotenv.config();
+app.use(express.json());
+app.use(
+  "/images",
+  express.static(path.join(new URL(".", import.meta.url).pathname, "images"))
+);
 
-mongoose.connect(uri, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true
-})
-  .then(console.log('Conectado a mongo'))
-  .catch((err) => console.log(err))
+mongoose
+  .connect(uri, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  })
+  .then(console.log("Conectado a mongo"))
+  .catch((err) => console.log(err));
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, 'images')
+    cb(null, "images");
   },
   filename: (req, file, cb) => {
-    cb(null, req.body.name)
-  }
-})
+    cb(null, req.body.name);
+  },
+});
 
-const upload = multer({ storage })
-app.post('/api/upload', upload.single('file'), (req, res) => {
-  res.status(200).json('El archivo a sido subido')
-})
+const upload = multer({ storage });
+app.post("/api/upload", upload.single("file"), (req, res) => {
+  res.status(200).json("El archivo a sido subido");
+});
 
-app.use('/api/auth', authRoute)
-app.use('/api/users', usersRoute)
-app.use('/api/user', userRoute)
-app.use('/api/posts', postsRoute)
-app.use('/api/post', postRoute)
-app.use('/api/categories', categoryRoute)
-app.use('/api/comments', commentsRoute)
-app.use('/api/visitas', visitasRoute)
-app.use('/api/usersNuevos', usersNuevosRoute)
+app.use("/api/auth", authRoute);
+app.use("/api/users", usersRoute);
+app.use("/api/user", userRoute);
+app.use("/api/posts", postsRoute);
+app.use("/api/post", postRoute);
+app.use("/api/categories", categoryRoute);
+app.use("/api/comments", commentsRoute);
+app.use("/api/visitas", visitasRoute);
+app.use("/api/usersNuevos", usersNuevosRoute);
 
-const PORT = process.env.PORT || 3001
+const PORT = process.env.PORT || 3001;
 
 app.listen(PORT, () => {
-  console.log('Server Runnig')
-})
+  console.log("Servidor corriendo en el puerto " + PORT);
+});

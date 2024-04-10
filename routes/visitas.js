@@ -1,38 +1,40 @@
-const router = require('express').Router()
-const Visitas = require('../models/Visitas')
+import express from "express";
+import Visitas from "../models/Visitas.js";
 
-router.post('/', async (req, res) => {
-  const newVisita = new Visitas(req.body)
+const router = express.Router();
+
+router.post("/", async (req, res) => {
+  const newVisita = new Visitas(req.body);
   try {
-    const savedVisita = await newVisita.save()
-    res.status(200).json(savedVisita)
+    const savedVisita = await newVisita.save();
+    res.status(200).json(savedVisita);
   } catch (err) {
-    res.status(500).json(err)
+    res.status(500).json(err);
   }
-})
+});
 
-router.put('/:id', async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
     const updatedVisita = await Visitas.findByIdAndUpdate(
       req.params.id,
       {
-        $set: req.body
+        $set: req.body,
       },
       { new: true }
-    )
-    res.status(200).json(updatedVisita)
+    );
+    res.status(200).json(updatedVisita);
   } catch (err) {
-    res.status(500).json(err)
-  };
-})
-
-router.get('/', async (req, res) => {
-  try {
-    const visitas = await Visitas.find()
-    res.status(200).json(visitas)
-  } catch (err) {
-    res.status(500).json(err)
+    res.status(500).json(err);
   }
-})
+});
 
-module.exports = router
+router.get("/", async (req, res) => {
+  try {
+    const visitas = await Visitas.find();
+    res.status(200).json(visitas);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+export default router;

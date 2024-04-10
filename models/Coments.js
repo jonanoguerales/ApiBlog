@@ -1,21 +1,21 @@
-const mongoose = require('mongoose')
+import mongoose from "mongoose";
 
 const ComentsSchema = new mongoose.Schema(
   {
     name: {
       type: String,
-      required: true
+      required: true,
     },
     id_post: {
       type: String,
-      required: true
+      required: true,
     },
     coment: {
       type: String,
-      required: true
-    }
+      required: true,
+    },
   },
   { timestamps: true } // Para documento se crea un campo para ver cuando se ha generado y se ha actualizado
-)
+);
 
-module.exports = mongoose.model('Coments', ComentsSchema)
+export default mongoose.model("Coments", ComentsSchema);

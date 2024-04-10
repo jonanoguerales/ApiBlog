@@ -1,25 +1,27 @@
-const router = require('express').Router()
-const Coments = require('../models/Coments')
+import express from "express";
+import Coments from "../models/Coments.js";
+
+const router = express.Router();
 
 // POST
-router.post('/', async (req, res) => {
-  const newComent = new Coments(req.body)
+router.post("/", async (req, res) => {
+  const newComent = new Coments(req.body);
   try {
-    const savedComent = await newComent.save()
-    res.status(200).json(savedComent)
+    const savedComent = await newComent.save();
+    res.status(200).json(savedComent);
   } catch (err) {
-    res.status(500).json(err)
+    res.status(500).json(err);
   }
-})
+});
 
 // GET
-router.get('/', async (req, res) => {
+router.get("/", async (req, res) => {
   try {
-    const coments = await Coments.find()
-    res.status(200).json(coments)
+    const coments = await Coments.find();
+    res.status(200).json(coments);
   } catch (err) {
-    res.status(500).json(err)
+    res.status(500).json(err);
   }
-})
+});
 
-module.exports = router
+export default router;

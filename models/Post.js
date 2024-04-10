@@ -1,36 +1,47 @@
-const mongoose = require('mongoose')
+import mongoose from "mongoose";
 
 const PostSchema = new mongoose.Schema(
   {
     title: {
       type: String,
       required: true,
-      unique: true
+      unique: true,
     },
     desc: {
       type: String,
-      required: true
+      required: true,
     },
     photo: {
       type: String,
-      default: 'defecto.jpg',
-      required: false
+      default: "defecto.jpg",
+      required: false,
     },
     username: {
       type: String,
-      required: true
+      required: true,
     },
     id_user: {
       type: String,
-      required: false
+      required: false,
     },
     categories: {
       type: String,
       required: true,
-      enum: ['Viajes', 'Terror', 'Interesantes', 'Música', 'Comedia', 'Misteriosos', 'Anime', 'Videojuegos', 'Romance', 'Bélica'] // Para definir las categorias que solo se pueden crear
-    }
+      enum: [
+        "Viajes",
+        "Terror",
+        "Interesantes",
+        "Música",
+        "Comedia",
+        "Misteriosos",
+        "Anime",
+        "Videojuegos",
+        "Romance",
+        "Bélica",
+      ], // Para definir las categorias que solo se pueden crear
+    },
   },
   { timestamps: true } // Para documento se crea un campo para ver cuando se ha generado y se ha actualizado
-)
+);
 
-module.exports = mongoose.model('Post', PostSchema) // Post nombre de la coleccion
+export default mongoose.model("Post", PostSchema); // Post nombre de la coleccion

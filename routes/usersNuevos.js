@@ -1,38 +1,39 @@
-const router = require('express').Router()
-const UsersNuevos = require('../models/UsersNuevos')
+import express from "express";
+import UsersNuevos from "../models/UsersNuevos.js";
+const router = express.Router();
 
-router.post('/', async (req, res) => {
-  const newUsersNuvos = new UsersNuevos(req.body)
+router.post("/", async (req, res) => {
+  const newUsersNuvos = new UsersNuevos(req.body);
   try {
-    const savedTotal = await newUsersNuvos.save()
-    res.status(200).json(savedTotal)
+    const savedTotal = await newUsersNuvos.save();
+    res.status(200).json(savedTotal);
   } catch (err) {
-    res.status(500).json(err)
+    res.status(500).json(err);
   }
-})
+});
 
-router.put('/:id', async (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
     const updatetotalUsers = await UsersNuevos.findByIdAndUpdate(
       req.params.id,
       {
-        $set: req.body
+        $set: req.body,
       },
       { new: true }
-    )
-    res.status(200).json(updatetotalUsers)
+    );
+    res.status(200).json(updatetotalUsers);
   } catch (err) {
-    res.status(500).json(err)
-  };
-})
-
-router.get('/', async (req, res) => {
-  try {
-    const totalUsers = await UsersNuevos.find()
-    res.status(200).json(totalUsers)
-  } catch (err) {
-    res.status(500).json(err)
+    res.status(500).json(err);
   }
-})
+});
 
-module.exports = router
+router.get("/", async (req, res) => {
+  try {
+    const totalUsers = await UsersNuevos.find();
+    res.status(200).json(totalUsers);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+export default router;
