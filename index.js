@@ -20,7 +20,7 @@ import usersNuevosRoute from "./routes/usersNuevos.js";
 import categoryRoute from "./routes/categories.js"; // Para conectar con base de datos
 
 const corsOptions = {
-  origin: "https://apiblog-01g5.onrender.com",
+  origin: "http://localhost:3000",
   optionsSuccessStatus: 200,
 };
 
