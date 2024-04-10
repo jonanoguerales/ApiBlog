@@ -13,14 +13,14 @@ import usersRoute from "./routes/users.js"; // Para conectar con base de datos
 import authRoute from "./routes/auth.js";
 import userRoute from "./routes/user.js"; // Para conectar con base de datos
 import postRoute from "./routes/post.js"; // Para conectar con base de datos
-import postsRoute from "./routes/post.js";
+import postsRoute from "./routes/posts.js";
 import commentsRoute from "./routes/comments.js";
 import visitasRoute from "./routes/visitas.js";
 import usersNuevosRoute from "./routes/usersNuevos.js";
 import categoryRoute from "./routes/categories.js"; // Para conectar con base de datos
 
 const corsOptions = {
-  origen: "http://localhost:3001",
+  origin: "https://apiblog-01g5.onrender.com",
   optionsSuccessStatus: 200,
 };
 
