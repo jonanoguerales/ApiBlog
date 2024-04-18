@@ -44,28 +44,26 @@ router.post("/login", async (req, res) => {
       return res.status(400).json("Contraseña incorrecta");
     }
 
-    if (username === user.username && password === user.password) {
-      const accessToken = jwt.sign(
-        {
-          username: user.username,
-          password: user.password,
-        },
-        process.env.JWT_SEC,
-        { expiresIn: "1d" }
-      );
-      const serialized = serialize("accessToken", accessToken, {
-        httpOnly: true, // para que no se pueda acceder desde el navegador
-        secure: true, // para que solo se pueda acceder desde https
-        sameSite: "none", // para que solo se pueda acceder desde la web en la que se ha iniciado sesión
-        maxAge: 1000 * 60 * 60 * 24, // 1 dia
-        path: "/",
-      });
+    const accessToken = jwt.sign(
+      {
+        exp: Math.floor(Date.now() / 1000) + 60 * 60 * 24,
+        id: user._id,
+        role: user.role,
+        username: user.username,
+      },
+      "secret"
+    );
 
-      res.setHeader("Set-Cookie", serialized);
-      const { password, ...others } = user._doc;
-      res.status(200).json({ ...others });
-    }
-    return res.status(400).json("Usuario o contraseña incorrecta");
+    const serialized = serialize("accessToken", accessToken, {
+      httpOnly: true, // solo accesible por HTTP
+      secure: false, // solo accesible por HTTPS
+      sameSite: "none", // solo accesible en localhost
+      maxAge: 1000 * 60 * 60 * 24, // 1 dia
+    });
+
+    res.setHeader("Set-Cookie", serialized);
+
+    res.status(200).json(serialized);
   } catch (err) {
     res.status(500).json(err);
   }
