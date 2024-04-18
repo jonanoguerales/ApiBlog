@@ -1,12 +1,14 @@
 import express from "express";
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
+import jwt from "jsonwebtoken";
+import { serialize } from "cookie";
 const router = express.Router();
 
 // router.post para crear
 // router.put para actualizar
 // router.delete para borrar
-// router.get para obtener data
+// router.get para obtener datas
 
 // Registro
 router.post("/register", async (req, res) => {
@@ -42,8 +44,28 @@ router.post("/login", async (req, res) => {
       return res.status(400).json("Contraseña incorrecta");
     }
 
-    const { password, ...others } = user._doc;
-    res.status(200).json(others);
+    if (username === user.username && password === user.password) {
+      const accessToken = jwt.sign(
+        {
+          username: user.username,
+          password: user.password,
+        },
+        process.env.JWT_SEC,
+        { expiresIn: "1d" }
+      );
+      const serialized = serialize("accessToken", accessToken, {
+        httpOnly: true, // para que no se pueda acceder desde el navegador
+        secure: true, // para que solo se pueda acceder desde https
+        sameSite: "none", // para que solo se pueda acceder desde la web en la que se ha iniciado sesión
+        maxAge: 1000 * 60 * 60 * 24, // 1 dia
+        path: "/",
+      });
+
+      res.setHeader("Set-Cookie", serialized);
+      const { password, ...others } = user._doc;
+      res.status(200).json({ ...others });
+    }
+    return res.status(400).json("Usuario o contraseña incorrecta");
   } catch (err) {
     res.status(500).json(err);
   }
