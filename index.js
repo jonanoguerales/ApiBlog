@@ -7,6 +7,7 @@ import path from "path";
 // const http = require('http')
 // const { Server } = require('socket.io')
 import cors from "cors";
+import cookieParser from "cookie-parser";
 
 // Routes
 import usersRoute from "./routes/users.js"; // Para conectar con base de datos
@@ -21,8 +22,11 @@ import categoryRoute from "./routes/categories.js"; // Para conectar con base de
 
 const corsOptions = {
   origin: "http://localhost:3000",
+  credentials: true, // para permitir el envío de cookies
   optionsSuccessStatus: 200,
 };
+app.use(cookieParser());
+app.use(cors(corsOptions));
 
 import { MongoClient, ServerApiVersion } from "mongodb";
 const uri =
@@ -51,8 +55,6 @@ async function run() {
 }
 run().catch(console.dir);
 
-app.use(cors(corsOptions));
-
 /*
 // socket conf
 const server = http.createServer(app)
@@ -70,7 +72,6 @@ io.on('connection', (socket) => {
     count = count + 1
   }
 }) */
-
 dotenv.config();
 app.use(express.json());
 app.use(

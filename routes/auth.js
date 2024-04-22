@@ -34,12 +34,15 @@ router.post("/register", async (req, res) => {
 // Login
 router.post("/login", async (req, res) => {
   try {
-    const user = await User.findOne({ username: req.body.username });
+    const username = req.body.username.trim(); // Eliminar espacios al principio y al final
+    const password = req.body.password.trim(); // Eliminar espacios al principio y al final
+
+    const user = await User.findOne({ username: username });
     if (!user) {
       return res.status(400).json("Usuario incorrecto");
     }
 
-    const validated = await bcrypt.compare(req.body.password, user.password);
+    const validated = await bcrypt.compare(password, user.password);
     if (!validated) {
       return res.status(400).json("Contraseña incorrecta");
     }
@@ -56,17 +59,57 @@ router.post("/login", async (req, res) => {
 
     const serialized = serialize("accessToken", accessToken, {
       httpOnly: true, // solo accesible por HTTP
-      secure: false, // solo accesible por HTTPS
-      sameSite: "none", // solo accesible en localhost
+      secure: true, // solo accesible por HTTPS
+      sameSite: "lax", // solo accesible en localhost
       maxAge: 1000 * 60 * 60 * 24, // 1 dia
+      path: "/",
     });
 
     res.setHeader("Set-Cookie", serialized);
-
-    res.status(200).json(serialized);
+    return res.status(200).json({ accessToken });
   } catch (err) {
     res.status(500).json(err);
   }
 });
 
+// Perfil
+router.get("/profile", async (req, res) => {
+  const { accessToken } = req.cookies;
+
+  if (!accessToken) {
+    return res.status(401).json({ message: "No token" });
+  }
+
+  try {
+    const validToken = jwt.verify(accessToken, "secret");
+    console.log(validToken);
+    return res.json({ message: "Sesion iniciada" });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
+// Logout
+router.post("/logout", (req, res) => {
+  const { accessToken } = req.cookies;
+
+  if (!accessToken) {
+    return res.status(401).json({ message: "No token" });
+  }
+
+  try {
+    const validToken = jwt.verify(accessToken, "secret");
+    const serialized = serialize("accessToken", "", {
+      httpOnly: true, // solo accesible por HTTP
+      secure: true, // solo accesible por HTTPS
+      sameSite: "lax", // solo accesible en localhost
+      maxAge: 0,
+      path: "/",
+    });
+    res.setHeader("Set-Cookie", serialized);
+    return res.json({ message: "Sesion iniciada" });
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
 export default router;
