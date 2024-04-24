@@ -43,6 +43,14 @@ const UserSchema = new mongoose.Schema(
       type: Number,
       default: "0",
     },
+    numComentarios: {
+      type: Number,
+      default: "0",
+    },
+    numLikes: {
+      type: Number,
+      default: "0",
+    },
   },
   { timestamps: true }
 );

@@ -83,7 +83,7 @@ router.get("/profile", async (req, res) => {
   try {
     const validToken = jwt.verify(accessToken, "secret");
     console.log(validToken);
-    return res.json({ message: "Sesion iniciada" });
+    return res.json({ validToken });
   } catch (err) {
     res.status(500).json(err);
   }

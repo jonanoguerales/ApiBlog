@@ -27,18 +27,16 @@ const PostSchema = new mongoose.Schema(
     categories: {
       type: String,
       required: true,
-      enum: [
-        "Viajes",
-        "Terror",
-        "Interesantes",
-        "Música",
-        "Comedia",
-        "Misteriosos",
-        "Anime",
-        "Videojuegos",
-        "Romance",
-        "Bélica",
-      ], // Para definir las categorias que solo se pueden crear
+      enum: ["Carne", "Pescado", "Pasta", "Verduras", "Ensaladas", "Postres"], // Para definir las categorias que solo se pueden crear
+    },
+    numLikes: {
+      type: Number,
+      default: 0,
+    },
+    bg: {
+      type: String,
+      default: "bg-indigo-50",
+      required: false,
     },
   },
   { timestamps: true } // Para documento se crea un campo para ver cuando se ha generado y se ha actualizado

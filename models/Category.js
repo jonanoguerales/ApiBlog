@@ -10,7 +10,12 @@ const CategorySchema = new mongoose.Schema( // schema clase para generar la estr
     },
     total: {
       type: Number,
+      default: 0,
       required: false,
+    },
+    color: {
+      type: String,
+      required: true,
     },
   },
   { timestamps: true }
