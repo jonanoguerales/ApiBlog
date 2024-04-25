@@ -82,7 +82,6 @@ router.get("/profile", async (req, res) => {
 
   try {
     const validToken = jwt.verify(accessToken, "secret");
-    console.log(validToken);
     return res.json({ validToken });
   } catch (err) {
     res.status(500).json(err);
@@ -93,23 +92,32 @@ router.get("/profile", async (req, res) => {
 router.post("/logout", (req, res) => {
   const { accessToken } = req.cookies;
 
+  console.log("Token de acceso actual:", accessToken);
+
   if (!accessToken) {
+    console.log("No se encontró ningún token de acceso en las cookies");
     return res.status(401).json({ message: "No token" });
   }
 
   try {
-    const validToken = jwt.verify(accessToken, "secret");
+    jwt.verify(accessToken, "secret");
     const serialized = serialize("accessToken", "", {
-      httpOnly: true, // solo accesible por HTTP
-      secure: true, // solo accesible por HTTPS
-      sameSite: "lax", // solo accesible en localhost
+      httpOnly: true,
+      secure: true,
+      sameSite: "strict",
       maxAge: 0,
       path: "/",
     });
+
+    console.log("Token de acceso verificado, eliminando la cookie");
+
     res.setHeader("Set-Cookie", serialized);
-    return res.json({ message: "Sesion iniciada" });
+    console.log("Cookie de acceso eliminada con éxito");
+
+    return res.json({ message: "Sesión cerrada" });
   } catch (err) {
-    res.status(500).json(err);
+    console.log("Error al verificar el token de acceso:", err);
+    return res.status(500).json(err);
   }
 });
 export default router;
