@@ -13,7 +13,7 @@ const PostSchema = new mongoose.Schema(
     },
     photo: {
       type: String,
-      default: "defecto.jpg",
+      default: "/defecto.webp",
       required: false,
     },
     username: {
