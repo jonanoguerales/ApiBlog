@@ -68,6 +68,16 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// GET POST
+router.get("/:categoria", async (req, res) => {
+  try {
+    const posts = await Post.find({ categories: req.params.categoria });
+    res.status(200).json(posts);
+  } catch (err) {
+    res.status(500).json(err);
+  }
+});
+
 // GET ALL POST
 router.get("/", async (req, res) => {
   const username = req.query.user;
