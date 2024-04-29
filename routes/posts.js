@@ -3,18 +3,7 @@ import Post from "../models/Post.js";
 
 const router = express.Router();
 
-// CREATE POST
-router.post("/", async (req, res) => {
-  const newPost = new Post(req.body);
-  try {
-    const savedPost = await newPost.save();
-    res.status(200).json(savedPost);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-// UPDATE POST
+// UPDATE POST con usuario
 router.put("/:id", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -39,7 +28,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// DELETE POST
+// DELETE POST con usuario
 router.delete("/:id", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
@@ -58,23 +47,20 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// GET POST
-router.get("/:id", async (req, res) => {
+// GET all POST by category
+router.get("/:category", async (req, res) => {
   try {
-    const post = await Post.findById(req.params.id);
-    res.status(200).json(post);
-  } catch (err) {
-    res.status(500).json(err);
-  }
-});
+    const { category } = req.params;
+    console.log(category);
 
-// GET POST
-router.get("/:categoria", async (req, res) => {
-  try {
-    const posts = await Post.find({ categories: req.params.categoria });
-    res.status(200).json(posts);
-  } catch (err) {
-    res.status(500).json(err);
+    const posts = await Post.find({ categories: category });
+    console.log(posts);
+    res.json(posts);
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "Error al obtener los posts de la categoría" });
   }
 });
 
