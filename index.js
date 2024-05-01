@@ -23,7 +23,6 @@ import categoryRoute from "./routes/categories.js"; // Para conectar con base de
 const corsOptions = {
   origin: "https://blog-cook.vercel.app",
   credentials: true, // para permitir el envío de cookies
-  optionsSuccessStatus: 200,
 };
 app.use(cookieParser());
 app.use(cors(corsOptions));
