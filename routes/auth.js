@@ -61,8 +61,8 @@ router.post("/login", async (req, res) => {
     const serialized = serialize("accessToken", accessToken, {
       httpOnly: true, // solo accesible por HTTP
       secure: true, // solo accesible por HTTPS
-      sameSite: "lax", // solo accesible en localhost
-      maxAge: 1000 * 60 * 60 * 24, // 1 dia
+      sameSite: "strict", // solo accesible en localhost
+      // maxAge no está presente, por lo que será una cookie de sesión
       path: "/",
     });
 
@@ -101,19 +101,12 @@ router.post("/logout", (req, res) => {
   }
 
   try {
-    jwt.verify(accessToken, "secret");
-    const serialized = serialize("accessToken", "", {
+    res.clearCookie("accessToken", {
       httpOnly: true,
       secure: true,
       sameSite: "strict",
-      maxAge: 0,
       path: "/",
     });
-
-    console.log("Token de acceso verificado, eliminando la cookie");
-
-    res.setHeader("Set-Cookie", serialized);
-    console.log("Cookie de acceso eliminada con éxito");
 
     return res.json({ message: "Sesión cerrada" });
   } catch (err) {

@@ -1,5 +1,6 @@
 import express from "express";
 import Post from "../models/Post.js";
+import User from "../models/User.js";
 
 const router = express.Router();
 
@@ -44,11 +45,13 @@ router.put("/:id", async (req, res) => {
 router.delete("/:id", async (req, res) => {
   try {
     const post = await Post.findById(req.params.id);
+    const id_user = post.id_user;
     try {
       await post.delete();
+      await User.findByIdAndUpdate(id_user, { $inc: { numPosts: -1 } });
       res.status(200).json("El post ha sido eliminado");
     } catch (err) {
-      res.status(500).json(err);
+      res.status(500).json("No se ha podido borrar el post");
     }
   } catch (err) {
     res.status(500).json(err);

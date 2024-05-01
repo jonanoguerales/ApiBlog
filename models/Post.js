@@ -27,7 +27,14 @@ const PostSchema = new mongoose.Schema(
     categories: {
       type: String,
       required: true,
-      enum: ["Carne", "Pescado", "Pasta", "Verduras", "Ensaladas", "Postres"], // Para definir las categorias que solo se pueden crear
+      enum: [
+        "Carnes",
+        "Pescados",
+        "Pastas",
+        "Verduras",
+        "Ensaladas",
+        "Postres",
+      ], // Para definir las categorias que solo se pueden crear
     },
     numLikes: {
       type: Number,

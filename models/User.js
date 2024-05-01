@@ -4,12 +4,11 @@ const UserSchema = new mongoose.Schema(
   {
     username: {
       type: String,
-      required: true,
+      required: [true, "El nombre de usuario es obligatorio"],
       unique: true,
     },
     nombre: {
       type: String,
-      required: true,
       unique: true,
     },
     email: {
@@ -27,13 +26,11 @@ const UserSchema = new mongoose.Schema(
     },
     telefono: {
       type: String,
-      required: true,
       unique: true,
     },
     profilePic: {
       type: String,
       default: "/usu.webp",
-      required: true,
     },
     role: {
       type: String,
