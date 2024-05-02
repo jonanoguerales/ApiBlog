@@ -21,8 +21,9 @@ import usersNuevosRoute from "./routes/usersNuevos.js";
 import categoryRoute from "./routes/categories.js"; // Para conectar con base de datos
 
 const corsOptions = {
-  origin: "https://blog-cook.vercel.app",
+  origin: "https://blogcook.onrender.com",
   credentials: true, // para permitir el envío de cookies
+  optionsSuccessStatus: 200,
 };
 app.use(cookieParser());
 app.use(cors(corsOptions));
