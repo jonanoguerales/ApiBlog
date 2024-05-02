@@ -48,7 +48,7 @@ router.put("/:id", async (req, res) => {
       res.clearCookie("accessToken", {
         httpOnly: true,
         secure: true,
-        sameSite: "none",
+        sameSite: "lax",
         path: "/",
       });
 
@@ -101,7 +101,7 @@ router.delete("/:id", async (req, res) => {
         res.clearCookie("accessToken", {
           httpOnly: true,
           secure: true,
-          sameSite: "none",
+          sameSite: "lax",
           path: "/",
         });
 

@@ -61,7 +61,7 @@ router.post("/login", async (req, res) => {
     const serialized = serialize("accessToken", accessToken, {
       httpOnly: true,
       secure: true,
-      sameSite: "none",
+      sameSite: "lax",
       // maxAge no está presente, por lo que será una cookie de sesión
       path: "/",
     });
@@ -104,7 +104,7 @@ router.post("/logout", (req, res) => {
     res.clearCookie("accessToken", {
       httpOnly: true,
       secure: true,
-      sameSite: "none",
+      sameSite: "lax",
       path: "/",
     });
 
