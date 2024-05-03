@@ -6,9 +6,9 @@ const router = express.Router();
 
 // CREATE POST
 router.post("/", async (req, res) => {
-  const newPost = new Post(req.body);
-  const id_user = newPost.id_user;
   try {
+    const newPost = new Post(req.body);
+    const id_user = newPost.id_user;
     const savedPost = await newPost.save();
     await User.findByIdAndUpdate(id_user, { $inc: { numPosts: +1 } });
     res.status(200).json(savedPost);
