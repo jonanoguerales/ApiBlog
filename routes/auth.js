@@ -2,7 +2,6 @@ import express from "express";
 import User from "../models/User.js";
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
-import { serialize } from "cookie";
 const router = express.Router();
 
 // router.post para crear
@@ -58,15 +57,6 @@ router.post("/login", async (req, res) => {
       "secret"
     );
 
-    const serialized = serialize("accessToken", accessToken, {
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax",
-      // maxAge no está presente, por lo que será una cookie de sesión
-      path: "/",
-    });
-
-    res.setHeader("Set-Cookie", serialized);
     return res.status(200).json({ accessToken });
   } catch (err) {
     res.status(500).json(err);
@@ -75,43 +65,20 @@ router.post("/login", async (req, res) => {
 
 // Perfil
 router.get("/profile", async (req, res) => {
-  const { accessToken } = req.cookies;
-
-  if (!accessToken) {
-    return res.status(401).json({ message: "No token" });
-  }
-
   try {
-    const validToken = jwt.verify(accessToken, "secret");
-    return res.json({ validToken });
+    const { authorization } = req.headers;
+    const accessToken = authorization.split(" ")[1];
+    const accessToken1 = JSON.parse(accessToken).accessToken;
+
+    if (!accessToken1) {
+      return res.status(401).json({ message: "No token" });
+    }
+    const decodedToken = jwt.verify(accessToken1, "secret");
+    console.log("Token válido:", decodedToken);
+    return res.json({ validToken: decodedToken });
   } catch (err) {
-    res.status(500).json(err);
-  }
-});
-
-// Logout
-router.post("/logout", (req, res) => {
-  const { accessToken } = req.cookies;
-
-  console.log("Token de acceso actual:", accessToken);
-
-  if (!accessToken) {
-    console.log("No se encontró ningún token de acceso en las cookies");
-    return res.status(401).json({ message: "No token" });
-  }
-
-  try {
-    res.clearCookie("accessToken", {
-      httpOnly: true,
-      secure: true,
-      sameSite: "lax",
-      path: "/",
-    });
-
-    return res.json({ message: "Sesión cerrada" });
-  } catch (err) {
-    console.log("Error al verificar el token de acceso:", err);
-    return res.status(500).json(err);
+    console.error("Error al verificar el token:", err);
+    return res.status(401).json({ message: "Invalid token" });
   }
 });
 export default router;

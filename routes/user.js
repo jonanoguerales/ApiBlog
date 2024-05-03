@@ -2,7 +2,6 @@ import express from "express";
 import User from "../models/User.js";
 import Post from "../models/Post.js";
 import jwt from "jsonwebtoken";
-import { serialize } from "cookie";
 import bcrypt from "bcrypt";
 
 const router = express.Router();
@@ -44,13 +43,6 @@ router.put("/:id", async (req, res) => {
         { $set: req.body },
         { new: true } // para que actualice también en la base de datos
       );
-      // Borrar la cookie antigua.
-      res.clearCookie("accessToken", {
-        httpOnly: true,
-        secure: true,
-        sameSite: "lax",
-        path: "/",
-      });
 
       // Generar un nuevo token con los datos actualizados del usuario.
       const accessToken = jwt.sign(
@@ -63,19 +55,8 @@ router.put("/:id", async (req, res) => {
         },
         "secret"
       );
-
-      // Establecer la nueva cookie.
-      const serialized = serialize("accessToken", accessToken, {
-        httpOnly: true,
-        secure: true,
-        sameSite: "none",
-        // maxAge no está presente, por lo que será una cookie de sesión
-        path: "/",
-      });
-
-      res.setHeader("Set-Cookie", serialized);
-
-      res.status(200).json(accessToken);
+      console.log("el nuevo token", accessToken);
+      res.status(200).json({ accessToken });
     } catch (err) {
       res.status(500).json("Error al actualizar el usuario");
     }

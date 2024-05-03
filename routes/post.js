@@ -7,11 +7,13 @@ const router = express.Router();
 // CREATE POST
 router.post("/", async (req, res) => {
   const newPost = new Post(req.body);
+  const id_user = newPost.id_user;
   try {
     const savedPost = await newPost.save();
+    await User.findByIdAndUpdate(id_user, { $inc: { numPosts: +1 } });
     res.status(200).json(savedPost);
   } catch (err) {
-    res.status(500).json(err);
+    res.status(500).json("No se ha podido añadir el post", err);
   }
 });
 
