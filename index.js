@@ -2,12 +2,8 @@ import express from "express"; // Iniciar servidor backend
 const app = express(); // Iniciar aplicacion de servidor
 import dotenv from "dotenv"; // Para ocultar credenciales
 import mongoose from "mongoose"; // Para conectar con base de datos
-import multer from "multer";
 import path from "path";
-// const http = require('http')
-// const { Server } = require('socket.io')
 import cors from "cors";
-import cookieParser from "cookie-parser";
 
 // Routes
 import usersRoute from "./routes/users.js"; // Para conectar con base de datos
@@ -22,10 +18,9 @@ import categoryRoute from "./routes/categories.js"; // Para conectar con base de
 
 const corsOptions = {
   origin: "https://blog-cook.vercel.app",
-  credentials: true, // para permitir el envío de cookies
+  credentials: true,
   optionsSuccessStatus: 200,
 };
-app.use(cookieParser());
 app.use(cors(corsOptions));
 
 import { MongoClient, ServerApiVersion } from "mongodb";
@@ -49,23 +44,6 @@ async function run() {
 }
 run().catch(console.dir);
 
-/*
-// socket conf
-const server = http.createServer(app)
-
-const io = new Server(server, {
-  cors: {
-    origin: 'http://localhost:9200',
-    methods: ['GET', 'POST', 'PUT', 'DELETE']
-  }
-})
-let count = 0
-io.on('connection', (socket) => {
-  if (socket.id) {
-    socket.emit('count', { count })
-    count = count + 1
-  }
-}) */
 dotenv.config();
 app.use(express.json());
 app.use(
@@ -80,20 +58,6 @@ mongoose
   })
   .then(console.log("Conectado a mongo"))
   .catch((err) => console.log(err));
-
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => {
-    cb(null, "images");
-  },
-  filename: (req, file, cb) => {
-    cb(null, req.body.name);
-  },
-});
-
-const upload = multer({ storage });
-app.post("/api/upload", upload.single("file"), (req, res) => {
-  res.status(200).json("El archivo a sido subido");
-});
 
 app.use("/api/auth", authRoute);
 app.use("/api/users", usersRoute);

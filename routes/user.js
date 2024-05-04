@@ -28,7 +28,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// UPDATE
+// UPDATE usuario logeado
 router.put("/:id", async (req, res) => {
   if (req.body.userId === req.params.id) {
     // Verificar si la contraseña fue actualizada para encriptarla.
@@ -72,24 +72,11 @@ router.delete("/:id", async (req, res) => {
     if (!user) {
       return res.status(404).json("Usuario no encontrado");
     }
-
     try {
-      if (req.user.id === req.params.id || req.user.role === "admin") {
-        await Post.deleteMany({ username: user.username }); // para borrar todos sus posts
-        await User.findByIdAndDelete(req.params.id); // para borrar el usuario
+      await Post.deleteMany({ username: user.username }); // para borrar todos sus posts
+      await User.findByIdAndDelete(req.params.id); // para borrar el usuario
 
-        // Para borrar la cookie de sesión del usuario
-        res.clearCookie("accessToken", {
-          httpOnly: true,
-          secure: true,
-          sameSite: "lax",
-          path: "/",
-        });
-
-        res.status(200).json("El usuario ha sido eliminado");
-      } else {
-        res.status(401).json("No tienes permiso para realizar esta acción");
-      }
+      res.status(200).json("Usuario eliminado");
     } catch (err) {
       res.status(500).json(err);
     }

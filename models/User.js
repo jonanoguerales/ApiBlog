@@ -26,7 +26,7 @@ const UserSchema = new mongoose.Schema(
     },
     telefono: {
       type: String,
-      unique: true,
+      required: false,
     },
     profilePic: {
       type: String,

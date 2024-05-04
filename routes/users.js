@@ -12,4 +12,19 @@ router.get("/", async (req, res) => {
   }
 });
 
+// UPDATE usuarios tablas
+router.put("/:id", async (req, res) => {
+  console.log(req.body);
+  try {
+    const updatedUser = await User.findByIdAndUpdate(
+      req.params.id,
+      { $set: req.body },
+      { new: true } // para que actualice también en la base de datos
+    );
+    console.log(updatedUser);
+    res.status(200).json({ updatedUser });
+  } catch (err) {
+    res.status(500).json("Error al actualizar el usuario");
+  }
+});
 export default router;
