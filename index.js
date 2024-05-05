@@ -12,12 +12,10 @@ import userRoute from "./routes/user.js"; // Para conectar con base de datos
 import postRoute from "./routes/post.js"; // Para conectar con base de datos
 import postsRoute from "./routes/posts.js";
 import commentsRoute from "./routes/comments.js";
-import visitasRoute from "./routes/visitas.js";
-import usersNuevosRoute from "./routes/usersNuevos.js";
 import categoryRoute from "./routes/categories.js"; // Para conectar con base de datos
 
 const corsOptions = {
-  origin: "https://blog-cook.vercel.app",
+  origin: "http://localhost:3000",
   credentials: true,
   optionsSuccessStatus: 200,
 };
@@ -66,8 +64,6 @@ app.use("/api/posts", postsRoute);
 app.use("/api/post", postRoute);
 app.use("/api/categories", categoryRoute);
 app.use("/api/comments", commentsRoute);
-app.use("/api/visitas", visitasRoute);
-app.use("/api/usersNuevos", usersNuevosRoute);
 
 const PORT = process.env.PORT || 3001;
 
