@@ -15,7 +15,7 @@ import commentsRoute from "./routes/comments.js";
 import categoryRoute from "./routes/categories.js"; // Para conectar con base de datos
 
 const corsOptions = {
-  origin: "https://blog-cook.vercel.app",
+  origin: "https://blog-cook.vercel.app , https://res.cloudinary.com/dpauhj4zu",
   credentials: true,
   optionsSuccessStatus: 200,
 };
