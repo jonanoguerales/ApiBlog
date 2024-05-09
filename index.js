@@ -14,12 +14,27 @@ import postsRoute from "./routes/posts.js";
 import commentsRoute from "./routes/comments.js";
 import categoryRoute from "./routes/categories.js"; // Para conectar con base de datos
 
-const corsOptions = {
-  origin: "https://blog-cook.vercel.app , https://res.cloudinary.com/dpauhj4zu",
-  credentials: true,
-  optionsSuccessStatus: 200,
+const whitelist = [
+  "https://blog-cook.vercel.app",
+  "https://res.cloudinary.com/dpauhj4zu",
+];
+const corsOptionsDelegate = function (req, callback) {
+  let corsOptions;
+  let isDomainAllowed = whitelist.indexOf(req.header("Origin")) !== -1;
+
+  if (isDomainAllowed) {
+    corsOptions = {
+      origin: true,
+      credentials: true,
+      optionsSuccessStatus: 200,
+    };
+  } else {
+    corsOptions = { origin: false };
+  }
+  callback(null, corsOptions);
 };
-app.use(cors(corsOptions));
+
+app.use(cors(corsOptionsDelegate));
 
 import { MongoClient, ServerApiVersion } from "mongodb";
 const uri =
