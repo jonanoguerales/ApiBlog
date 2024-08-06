@@ -15,7 +15,6 @@ import commentsRoute from "./routes/comments.js";
 import categoryRoute from "./routes/categories.js"; // Para conectar con base de datos
 
 const whitelist = [
-  "http://localhost:3000",
   "https://blog-cook.vercel.app",
   "https://res.cloudinary.com/dpauhj4zu",
 ];
